@@ -1,0 +1,1245 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Secura</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: url("securabg.png") no-repeat center center fixed;
+            background-size: cover;
+            color: #e2e8f0;
+        }
+
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: -1;
+            }
+
+        .upload-box.dragover {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }   
+
+        .auth-box {
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 14px;
+            width: 350px;
+            margin: 60px auto; /* center */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+            .auth-box form {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .auth-box input {
+                padding: 12px;
+                border-radius: 8px;
+                border: none;
+                background: #0f172a;
+                color: white;
+                outline: none;
+            }
+
+                .auth-box input::placeholder {
+                    color: #94a3b8;
+                }
+
+        .login-btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .register-btn {
+            background: #10b981;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+
+        .register-btn:hover {
+            opacity: 0.9;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: #1e293b;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+            header button {
+                background: #ef4444;
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 6px;
+                cursor: pointer;
+            }
+
+        .container {
+            padding: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* LOGIN */
+        .auth-box {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+            .auth-box input {
+                padding: 8px;
+                margin-right: 10px;
+                border-radius: 6px;
+                border: none;
+            }
+
+            .auth-box button {
+                padding: 8px 12px;
+                margin-right: 5px;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+            }
+
+        .login-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .register-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        /* UPLOAD */
+        .upload-box {
+            border: 2px dashed #334155;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: 0.25s;
+            background: rgba(255,255,255,0.02);
+        }
+
+            .upload-box:hover {
+                border-color: #3b82f6;
+                background: rgba(59, 130, 246, 0.08);
+            }
+
+
+        .file-name {
+            font-weight: 500;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-block;
+            transition: 0.2s;
+        }
+
+            .upload-btn:hover {
+                transform: translateY(-2px);
+            }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            button:hover {
+                transform: scale(1.05);
+            }
+
+        /* FILE GRID */
+        .files {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            padding: 16px;
+            border-radius: 14px;
+            transition: 0.25s;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+            .card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            }
+
+        .file-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-check {
+            accent-color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        .icon {
+            font-size: 28px;
+        }
+
+        .menu {
+            display: flex;
+            gap: 6px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .card:hover .menu {
+            opacity: 1;
+        }
+
+        .menu button {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 13px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            backdrop-filter: blur(6px);
+            transition: 0.2s;
+        }
+
+            .menu button:hover {
+                background: rgba(255,255,255,0.15);
+            }
+
+        .menu .preview:hover {
+            background: #10b981;
+        }
+
+        .menu .download:hover {
+            background: #3b82f6;
+        }
+
+        .menu .share:hover {
+            background: #8b5cf6;
+        }
+
+        .menu .rename:hover {
+            background: #f59e0b;
+        }
+
+        .menu .delete:hover {
+            background: #ef4444;
+        }
+
+        .card:hover .menu {
+            opacity: 1;
+        }
+
+        .menu button {
+            border: none;
+            padding: 5px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .preview {
+            background: #10b981;
+            color: white;
+        }
+
+        .download {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .file-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .empty {
+            text-align: center;
+            margin-top: 30px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <div style="font-size:18px;">Secura 🔐</div>
+            <div id="userName" style="font-size:12px; color:#94a3b8;"></div>
+        </div>
+        <button id="logoutBtn" onclick="logout()">Logout</button>
+    </header>
+
+    <div class="container">
+
+        <!-- LOGIN -->
+        <div class="auth-box" id="authBox">
+            <form onsubmit="handleLogin(event)">
+                <h2 style="margin-bottom:15px; text-align:center;">Welcome Back</h2>
+                <input id="username" placeholder="Username" required>
+                <input id="password" type="password" placeholder="Password" required>
+
+                <button type="submit" class="login-btn">Login</button>
+                <button type="button" class="register-btn" onclick="register()">Register</button>
+            </form>
+        </div>
+
+
+        <!-- upload box -->
+        <div class="upload-box" id="uploadBox">
+
+            <p>Drag & Drop file here</p>
+
+            <label class="upload-btn">
+                + Upload File
+                <input type="file" id="fileInput" hidden onchange="upload()">
+            </label>
+
+        </div>
+
+        <div id="uploadControls" style="display:none; margin-top:10px;">
+            <button id="pauseResumeBtn" onclick="toggleUpload()">⏸ Pause</button>
+        </div>
+
+        <div id="progressContainer" style="display:none; margin-top:10px;">
+            <div style="background:#334155; border-radius:8px; overflow:hidden;">
+                <div id="progressBar"
+                     style="height:10px; width:0%; background:#3b82f6; transition:width 0.3s ease;">
+                </div>
+            </div>
+            <div id="progressText" style="font-size:12px; margin-top:5px;">0%</div>
+        </div>
+
+
+        <!-- share link --->
+        <!-- ===== SHARE MODAL ===== -->
+        <div id="shareModal" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+">
+
+            <div style="
+        background: rgba(30, 41, 59, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 24px;
+        border-radius: 16px;
+        width: 340px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.05);
+    ">
+
+                <h3 style="margin-bottom:15px; font-weight:500;">
+                    Share File <span style="opacity:0.7;">🔗</span>
+                </h3>
+
+                <input id="expiryInput" placeholder="Expiry (minutes)" style="
+            width:100%;
+            padding:10px;
+            border-radius:8px;
+            border:none;
+            margin-bottom:10px;
+            background:#0f172a;
+            color:white;
+        ">
+
+                <input id="passwordInput" placeholder="Password (optional)" style="
+            width:100%;
+            padding:10px;
+            border-radius:8px;
+            border:none;
+            margin-bottom:12px;
+            background:#0f172a;
+            color:white;
+        ">
+
+                <button onclick="generateShare()" style="
+            width:100%;
+            padding:10px;
+            border:none;
+            border-radius:10px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color:white;
+            margin-bottom:10px;
+            cursor:pointer;
+        ">
+                    Generate Link
+                </button>
+
+                <div id="shareResult" style="margin-top:10px; display:none;">
+
+                    <div id="shareLinkBox" style="
+                background:#0f172a;
+                padding:8px;
+                border-radius:8px;
+                font-size:12px;
+                word-break:break-all;
+                margin-bottom:8px;
+            "></div>
+
+                    <button onclick="copyLink()" style="
+                width:100%;
+                padding:8px;
+                border:none;
+                border-radius:8px;
+                background:#10b981;
+                color:white;
+                cursor:pointer;
+                margin-bottom:6px;
+            ">
+                        Copy Link
+                    </button>
+
+                </div>
+
+                <button onclick="closeShare()" style="
+            width:100%;
+            padding:8px;
+            border:none;
+            border-radius:8px;
+            background:#334155;
+            color:white;
+            cursor:pointer;
+        ">
+                    Close
+                </button>
+
+            </div>
+        </div>
+
+
+        <!--- rename modal -->
+
+        <div id="renameModal" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.6);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+">
+
+            <div style="
+        background:#1e293b;
+        padding:20px;
+        border-radius:12px;
+        width:320px;
+    ">
+
+                <h3>Rename File ✏️</h3>
+
+                <input id="renameInput" placeholder="New file name"
+                       style="width:100%; margin-bottom:10px;">
+
+                <button onclick="confirmRename()" class="login-btn">
+                    Rename
+                </button>
+
+                <button onclick="closeRename()">Cancel</button>
+
+            </div>
+        </div>
+
+        <!-- delete action bar -->
+                
+        <!-- filter -->
+
+        <div id="filterRow" style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+">
+
+            <!-- LEFT: FILTERS -->
+            <div style="display:flex; gap:8px;">
+                <button onclick="setFilter('all')">All</button>
+                <button onclick="setFilter('image')">🖼️</button>
+                <button onclick="setFilter('doc')">📄</button>
+                <button onclick="setFilter('video')">🎬</button>
+            </div>
+
+            <!-- RIGHT: DELETE -->
+            <button id="deleteBtn" onclick="toggleDeleteMode()" style="
+        background:#ef4444;
+        color:white;
+        padding:8px 14px;
+        border-radius:8px;
+        border:none;
+        cursor:pointer;
+        display:none;
+    ">
+                Delete
+            </button>
+
+        </div>
+
+        <!-- search -->
+        <input id="search" placeholder="Search files..."
+               style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:15px;"
+               oninput="applyFilters()">
+
+        <!-- FILES -->
+        <div class="files" id="list"></div>
+
+    </div>
+
+    <script>
+        const base = "https://localhost:7032/api/File";
+        let token = localStorage.getItem("token");
+        let allFiles = [];
+        let currentFilter = "all";
+        let isPaused = false;
+        let currentFile = null;
+        let deleteMode = false;
+
+        if (!token) {
+            document.getElementById("uploadBox").style.display = "none";
+            document.getElementById("logoutBtn").style.display = "none";
+            document.getElementById("search").style.display = "none";
+            document.getElementById("filterRow").style.display = "none"; // ✅ fixed
+        }
+
+        // ===== LOGIN HANDLER =====
+        function handleLogin(e) {
+            e.preventDefault();
+            login();
+        }
+
+        // ===== ICON =====
+        function getIcon(name) {
+            let ext = name.split('.').pop().toLowerCase();
+            if (["png", "jpg", "jpeg"].includes(ext)) return "🖼️";
+            if (["pdf"].includes(ext)) return "📄";
+            if (["mp4"].includes(ext)) return "🎬";
+            return "📁";
+        }
+
+        // ===== LOGIN =====
+        async function login() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            let res = await fetch("https://localhost:7032/api/Auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+
+            let data = await res.json();
+
+            if (data.token) {
+                localStorage.setItem("token", data.token);
+                location.reload();
+            } else {
+                alert("Login failed");
+            }
+        }
+
+        // ===== REGISTER =====
+        async function register() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            await fetch("https://localhost:7032/api/Auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password })
+            });
+
+            alert("Registered. Now login.");
+        }
+
+
+
+        // ===== LOAD FILES =====
+        async function loadFiles() {
+            if (!token) return;
+
+            deleteMode = false; // 🔥 IMPORTANT FIX
+
+            document.getElementById("authBox").style.display = "none";
+            document.getElementById("search").style.display = "block";
+            document.getElementById("deleteBtn").style.display = "block";
+
+            let res = await fetch(base + "/all", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+
+            let data = await res.json();
+
+            allFiles = data;
+
+            if (data.length > 0 && data[0].userName) {
+                document.getElementById("userName").innerText =
+                    "Welcome, " + data[0].userName;
+            }
+
+            applyFilters();
+        }
+
+        function renderFiles(files) {
+            let list = document.getElementById("list");
+            list.innerHTML = "";
+
+            if (!files || files.length === 0) {
+                list.innerHTML = `<div class="empty">No files found 🔍</div>`;
+                return;
+            }
+
+            // 🔥 control checkbox visibility
+            const checkboxDisplay = deleteMode ? "block" : "none";
+
+            files.forEach(f => {
+                let div = document.createElement("div");
+                div.className = "card";
+
+                // 🔥 prevent quote breaking in name
+                let safeName = f.name.replace(/'/g, "\\'");
+
+                div.innerHTML = `
+        <div class="file-top">
+            <input type="checkbox" class="file-check" value="${f.id}" style="display:${checkboxDisplay};">
+            <span class="icon">${getIcon(f.name)}</span>
+
+            <div class="menu">
+                <button class="preview" onclick="preview(${f.id})">👁</button>
+                <button class="download" onclick="downloadFile(${f.id})">⬇</button>
+                <button class="share" onclick="openShare(${f.id})">🔗</button>
+                <button class="rename" onclick="openRename(${f.id}, '${safeName}')">✏️</button>
+            </div>
+        </div>
+
+        <div class="file-name">${f.name}</div>
+        <div style="font-size:12px; color:#94a3b8;">${f.size || ""}</div>
+        `;
+
+                list.appendChild(div);
+            });
+        }
+ 
+        //====== uppload
+
+        async function upload() {
+            let file = document.getElementById("fileInput").files[0];
+            if (!file) {
+                alert("Select a file");
+                return;
+            }
+
+            currentFile = file;
+            isPaused = false;
+
+            document.getElementById("uploadControls").style.display = "block";
+            document.getElementById("pauseResumeBtn").innerText = "⏸ Pause";
+
+            document.getElementById("progressContainer").style.display = "block";
+
+            try {
+                await startUpload(file);
+            } catch (err) {
+                alert("Upload failed: " + err.message);
+            }
+        }
+        // ===== DELETE =====
+        async function deleteFile(id) {
+            await fetch(base + "/" + id, {
+                method: "DELETE",
+                headers: { "Authorization": "Bearer " + token }
+            });
+
+            loadFiles();
+        }
+
+        // ===== PREVIEW =====
+        async function preview(id) {
+            const res = await fetch(base + "/preview/" + id, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!res.ok) {
+                const msg = await res.text();
+                alert(msg); // 🔥 shows "Preview not supported"
+                return;
+            }
+
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+
+            window.open(url);
+        }
+
+        // ===== DOWNLOAD =====
+
+
+
+        // ===== LOGOUT =====
+        function logout() {
+            localStorage.removeItem("token");
+
+            document.getElementById("deleteBtn").style.display = "none"; // 🔥 ADD THIS
+
+            location.reload();
+        }
+
+        // ===== UI CONTROL =====
+        if (!token) {
+            document.getElementById("uploadBox").style.display = "none";
+            document.getElementById("logoutBtn").style.display = "none";
+        }
+
+        // ===== INIT =====
+        if (token) loadFiles();
+
+        function applyFilters() {
+            let query = document.getElementById("search").value.toLowerCase();
+
+            let filtered = allFiles.filter(f => {
+                let name = f.name.toLowerCase();
+
+                // search
+                if (!name.includes(query)) return false;
+
+                let ext = name.split('.').pop();
+
+                // filter
+                if (currentFilter === "image")
+                    return ["png", "jpg", "jpeg"].includes(ext);
+
+                if (currentFilter === "doc")
+                    return ["pdf", "doc", "docx"].includes(ext);
+
+                if (currentFilter === "video")
+                    return ["mp4", "mkv"].includes(ext);
+
+                return true;
+            });
+
+            renderFiles(filtered);
+        }
+
+        function setFilter(type) {
+            currentFilter = type;
+            applyFilters();
+        }
+
+        // =========== download file 
+        async function downloadFile(id) {
+            const res = await fetch(base + "/download/" + id, {
+                headers: {
+                    "Authorization": "Bearer " + token   // 🔥 ADD THIS
+                }
+            });
+
+            if (!res.ok) {
+                alert("Download failed");
+                return;
+            }
+
+            const blob = await res.blob();
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+
+            const contentDisposition = res.headers.get("Content-Disposition");
+
+            let filename = "download";
+
+            if (contentDisposition) {
+                const utf8Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/);
+                const normalMatch = contentDisposition.match(/filename="([^"]+)"/);
+
+                if (utf8Match) {
+                    filename = decodeURIComponent(utf8Match[1]);
+                } else if (normalMatch) {
+                    filename = normalMatch[1];
+                }
+            }
+
+            a.href = url;
+            a.download = filename;
+
+            document.body.appendChild(a);
+            a.click();
+
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        }
+
+        //=========== share ==========
+
+        async function shareFile(id) {
+            let expiry = prompt("Expiry in minutes (optional):");
+            let password = prompt("Password (optional):");
+
+            let params = new URLSearchParams();
+
+            if (expiry && expiry.trim() !== "")
+                params.append("expiryMinutes", expiry);
+
+            if (password && password.trim() !== "")
+                params.append("password", password);
+
+            const res = await fetch(base + "/share/" + id + "?" + params.toString(), {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!res.ok) {
+                const err = await res.text();
+                alert("Share failed: " + err);
+                return;
+            }
+
+            const data = await res.json();
+
+            prompt("Copy your share link:", data.url);
+        }
+
+        //==share file handling
+
+        let currentFileId = null;
+
+        function openShare(id) {
+            currentFileId = id;
+
+            // 🔥 RESET EVERYTHING
+            document.getElementById("expiryInput").value = "";
+            document.getElementById("passwordInput").value = "";
+            document.getElementById("shareResult").style.display = "none";
+            document.getElementById("shareLinkBox").innerText = "";
+
+            document.getElementById("shareModal").style.display = "flex";
+        }
+
+        function closeShare() {
+            document.getElementById("shareModal").style.display = "none";
+            document.getElementById("shareResult").style.display = "none";
+        }
+
+        async function generateShare() {
+            let expiry = document.getElementById("expiryInput").value;
+            let password = document.getElementById("passwordInput").value;
+
+            let params = new URLSearchParams();
+
+            if (expiry) params.append("expiryMinutes", expiry);
+            if (password) params.append("password", password);
+
+            const res = await fetch(base + "/share/" + currentFileId + "?" + params.toString(), {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!res.ok) {
+                alert("Failed to generate link");
+                return;
+            }
+
+            const data = await res.json();
+
+            document.getElementById("shareLinkBox").innerText = data.url;
+            document.getElementById("shareResult").style.display = "block";
+        }
+
+        //=== copy link 
+
+        function copyLink() {
+            let text = document.getElementById("shareLinkBox").innerText;
+
+            navigator.clipboard.writeText(text);
+
+            alert("Copied!");
+        }
+
+        //=== share link ===
+
+        async function openSharedLink(url) {
+            let password = prompt("Enter password (if required):");
+
+            let finalUrl = url;
+
+            if (password && password.trim() !== "") {
+                finalUrl += "?password=" + encodeURIComponent(password);
+            }
+
+            window.open(finalUrl, "_blank");
+        }
+
+        //=== upload box js
+
+        const uploadBox = document.getElementById("uploadBox");
+
+        // 🔥 prevent browser opening file
+        ["dragenter", "dragover", "dragleave", "drop"].forEach(event => {
+            uploadBox.addEventListener(event, e => e.preventDefault());
+        });
+
+        // 🔥 highlight
+        uploadBox.addEventListener("dragover", () => {
+            uploadBox.classList.add("dragover");
+        });
+
+        uploadBox.addEventListener("dragleave", () => {
+            uploadBox.classList.remove("dragover");
+        });
+
+        // 🔥 drop upload
+        uploadBox.addEventListener("drop", e => {
+            uploadBox.classList.remove("dragover");
+
+            const file = e.dataTransfer.files[0];
+            if (!file) return;
+
+            uploadFileDirect(file);
+        });
+
+        async function uploadFileDirect(file) {
+            let form = new FormData();
+            form.append("file", file);
+
+            await fetch(base + "/upload", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: form
+            });
+
+            await loadFiles();
+        }
+
+        console.log(JSON.parse(atob(token.split('.')[1])));
+
+        function getUsernameFromToken() {
+            if (!token) return "";
+
+            let payload = JSON.parse(atob(token.split('.')[1]));
+
+            console.log(payload); // 🔍 debug
+
+            return payload.name || payload.username || payload.unique_name || payload.sub || "User";
+        }
+
+        //==== =rename
+        let renameFileId = null;
+
+        function openRename(id, oldName) {
+            renameFileId = id;
+
+            document.getElementById("renameInput").value = oldName;
+            document.getElementById("renameModal").style.display = "flex";
+        }
+
+        function closeRename() {
+            document.getElementById("renameModal").style.display = "none";
+        }
+
+        async function confirmRename() {
+            let newName = document.getElementById("renameInput").value;
+
+            if (!newName || newName.trim() === "") return;
+
+            const res = await fetch(base + "/rename/" + renameFileId, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(newName)
+            });
+
+            if (!res.ok) {
+                alert("Rename failed");
+                return;
+            }
+
+            closeRename();
+            loadFiles();
+        }
+
+        //=== pause and resume
+
+        async function startUpload(file) {
+
+            const chunkSize = 5 * 1024 * 1024;
+            const totalChunks = Math.ceil(file.size / chunkSize);
+            const parallel = 3;
+
+            const key = "upload_" + file.name;
+            let doneChunks = JSON.parse(localStorage.getItem(key) || "[]");
+
+            let uploadedChunks = doneChunks.length;
+
+            document.getElementById("progressContainer").style.display = "block";
+
+            function updateProgress() {
+                let percent = Math.round((uploadedChunks / totalChunks) * 100);
+                document.getElementById("progressBar").style.width = percent + "%";
+                document.getElementById("progressText").innerText = "Uploading " + percent + "%";
+            }
+
+            updateProgress();
+
+            async function uploadChunk(i) {
+                if (doneChunks.includes(i)) return;
+                if (isPaused) throw new Error("PAUSED");
+
+                let start = i * chunkSize;
+                let end = Math.min(start + chunkSize, file.size);
+                let chunk = file.slice(start, end);
+
+                let form = new FormData();
+                form.append("chunk", chunk);
+                form.append("fileName", file.name);
+                form.append("chunkIndex", i);
+
+                let res = await fetch(base + "/upload-chunk", {
+                    method: "POST",
+                    headers: { "Authorization": "Bearer " + token },
+                    body: form
+                });
+
+                if (!res.ok) {
+                    let err = await res.text();
+                    throw new Error(err);
+                }
+
+                doneChunks.push(i);
+                localStorage.setItem(key, JSON.stringify(doneChunks));
+
+                uploadedChunks++;
+                updateProgress();
+            }
+
+
+            try {
+                for (let i = 0; i < totalChunks; i += parallel) {
+
+                    if (isPaused) throw new Error("PAUSED");
+
+                    let batch = [];
+
+                    for (let j = i; j < i + parallel && j < totalChunks; j++) {
+                        batch.push(uploadChunk(j));
+                    }
+
+                    await Promise.all(batch);
+                }
+            } catch (err) {
+                if (err.message === "PAUSED") {
+                    document.getElementById("progressText").innerText = "Paused ⏸";
+                    return;
+                }
+
+                alert("Upload error: " + err.message);
+                return;
+            }
+
+            // 🔥 merge after complete
+            let mergeRes = await fetch(base + "/merge", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    fileName: file.name,
+                    totalChunks: totalChunks
+                })
+            });
+
+            if (!mergeRes.ok) {
+                alert("Merge failed");
+                return;
+            }
+
+            localStorage.removeItem(key);
+
+            document.getElementById("progressText").innerText = "Done ✅";
+            await loadFiles();
+
+            document.getElementById("uploadControls").style.display = "none";
+        }
+
+        function pauseUpload() {
+            isPaused = true;
+        }
+
+        function resumeUpload() {
+            if (!currentFile) return;
+
+            isPaused = false;
+            startUpload(currentFile); // 🔥 resumes using saved chunks
+        }
+
+
+        //== toggle upload 
+
+        function toggleUpload() {
+            if (!currentFile) return;
+
+            const btn = document.getElementById("pauseResumeBtn");
+
+            if (isPaused) {
+                isPaused = false;
+                btn.innerText = "⏸ Pause";
+
+                // 🔥 resume safely
+                setTimeout(() => startUpload(currentFile), 0);
+            } else {
+                isPaused = true;
+                btn.innerText = "▶ Resume";
+            }
+        }
+
+
+        //== delete selction 
+
+        async function deleteSelected() {
+            let checked = document.querySelectorAll(".file-check:checked");
+
+            // 🔥 NO SELECTION CASE
+            if (checked.length === 0) {
+                alert("No files selected.");
+
+                // 🔥 reset UI back to normal
+                deleteMode = false;
+
+                document.querySelectorAll(".file-check").forEach(cb => {
+                    cb.style.display = "none";
+                    cb.checked = false;
+                });
+
+                let btn = document.getElementById("deleteBtn");
+                btn.innerText = "Delete";
+                btn.style.background = "#ef4444";
+
+                return;
+            }
+
+            // 🔥 DELETE FLOW
+            for (let cb of checked) {
+                let id = cb.value;
+
+                await fetch(base + "/" + id, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+            }
+
+            // 🔥 reset after delete
+            deleteMode = false;
+
+            document.querySelectorAll(".file-check").forEach(cb => {
+                cb.style.display = "none";
+                cb.checked = false;
+            });
+
+            let btn = document.getElementById("deleteBtn");
+            btn.innerText = "Delete";
+            btn.style.background = "#ef4444";
+
+            await loadFiles();
+        }
+
+        //==== delete toggle 
+
+        function toggleDeleteMode() {
+            deleteMode = !deleteMode;
+
+            let checkboxes = document.querySelectorAll(".file-check");
+            let btn = document.getElementById("deleteBtn");
+
+            if (deleteMode) {
+                checkboxes.forEach(cb => cb.style.display = "block");
+                btn.innerText = "Delete selected";
+                btn.style.background = "#dc2626";
+            } else {
+                // 🔥 perform delete
+                deleteSelected();
+
+                checkboxes.forEach(cb => {
+                    cb.style.display = "none";
+                    cb.checked = false;
+                });
+
+                btn.innerText = "Delete";
+                btn.style.background = "#ef4444";
+            }
+        }
+
+
+    </script>
+
+
+</body>
+</html>
